@@ -7,6 +7,7 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -15,19 +16,25 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import data.SaveReadFile;
+
 import gui.DrawingPanel;
 
 //import Test.MojKomponent;
 
 public class Projekt_1_MLP extends JFrame {
 
-	Siec siec;
+	private Siec siec;
+	private SaveReadFile saveReadFile;
+	private JComboBox<String> trainAsCombo;
+	private JButton buttonZapis;
 	private JPanel mainPanel;
 	private JPanel panelOpcji;
 	private DrawingPanel drawingPanel;
 	private JPanel panelWyboruLiter;
-	JButton clearButton;
-	private final int rozdzielczosc=40;
+	private JButton clearButton;
+	private final int rozdzielczosc = 20;
+	private ButtonGroup grupa;
 
 	public Projekt_1_MLP(String string) {
 		super(string);
@@ -42,9 +49,8 @@ public class Projekt_1_MLP extends JFrame {
 		setSize(new Dimension(680, 470));
 		setLocationRelativeTo(null);
 		setResizable(false);
-		
-		setOnClicks();
 
+		setOnClicks();
 		int[] tab = new int[3];
 		tab[0] = 25;
 		tab[1] = 5;
@@ -73,32 +79,38 @@ public class Projekt_1_MLP extends JFrame {
 		panelOpcji = new JPanel();
 		panelOpcji.setBackground(Color.LIGHT_GRAY);
 		panelOpcji.setPreferredSize(new Dimension(200, 420));
-		JRadioButton radioButtonA = new JRadioButton("A");
-		radioButtonA.setBackground(Color.LIGHT_GRAY);
-		JRadioButton radioButtonO = new JRadioButton("O");
-		radioButtonO.setBackground(Color.LIGHT_GRAY);
-		JRadioButton radioButtonC = new JRadioButton("C");
-		radioButtonC.setBackground(Color.LIGHT_GRAY);
-		ButtonGroup grupa = new ButtonGroup(); 
-		grupa.add(radioButtonA);
-		grupa.add(radioButtonO); 
-		grupa.add(radioButtonC);
-		panelOpcji.add(radioButtonA);
-		panelOpcji.add(radioButtonO);
-		panelOpcji.add(radioButtonC);
-		JButton buttonUcz = new JButton("Ucz");
-		buttonUcz.setPreferredSize(new Dimension(100, 30));
+		/*
+		 * JRadioButton radioButtonA = new JRadioButton("A");
+		 * radioButtonA.setBackground(Color.LIGHT_GRAY); JRadioButton radioButtonO = new
+		 * JRadioButton("O"); radioButtonO.setBackground(Color.LIGHT_GRAY); JRadioButton
+		 * radioButtonC = new JRadioButton("C");
+		 * radioButtonC.setBackground(Color.LIGHT_GRAY); grupa = new ButtonGroup();
+		 * grupa.add(radioButtonA); grupa.add(radioButtonO); grupa.add(radioButtonC);
+		 * panelOpcji.add(radioButtonA); panelOpcji.add(radioButtonO);
+		 * panelOpcji.add(radioButtonC);
+		 */
+		trainAsCombo = new JComboBox<>(new String[] { "A", "O", "C" });
+		trainAsCombo.setPreferredSize(new Dimension(50, 30));
+		panelOpcji.add(trainAsCombo);
+		buttonZapis = new JButton("Zapisz");
+		buttonZapis.setPreferredSize(new Dimension(100, 30));
 		clearButton = new JButton("Wyczyœæ");
 		clearButton.setPreferredSize(new Dimension(100, 30));
-		panelOpcji.add(buttonUcz);
+		panelOpcji.add(buttonZapis);
 		panelOpcji.add(clearButton);
-		// add(panelOpcji);
 
 		mainPanel.add(panelOpcji);
 	}
-	
-	private void setOnClicks() { clearButton.addActionListener(e ->
-	 drawingPanel.clear());}
+
+	private void setOnClicks() {
+		clearButton.addActionListener(e -> drawingPanel.clear());
+		
+		buttonZapis.addActionListener(e -> {
+			String letter = (String) trainAsCombo.getSelectedItem();
+			SaveReadFile.saveToFile(drawingPanel.getPixels(), letter);
+			
+		});
+	}
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
