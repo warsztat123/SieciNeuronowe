@@ -12,9 +12,12 @@ import java.util.ArrayList;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 import data.SaveReadFile;
 
@@ -33,16 +36,16 @@ public class Projekt_1_MLP extends JFrame {
 	private DrawingPanel drawingPanel;
 	private JPanel panelWyboruLiter;
 	private JButton clearButton;
-	private final int rozdzielczosc = 20;
+	private final int rozdzielczosc = 40;
 	private ButtonGroup grupa;
+	private JTextField trainingSetsAmount;
+	private JButton trainNetworkButton;
 
 	public Projekt_1_MLP(String string) {
 		super(string);
 		panelGlowny();
 		PanelDoRysowania();
 		panelOpcji();
-		// panelWyboruLiter();
-		// panelWyboru();
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
@@ -89,6 +92,15 @@ public class Projekt_1_MLP extends JFrame {
 		 * panelOpcji.add(radioButtonA); panelOpcji.add(radioButtonO);
 		 * panelOpcji.add(radioButtonC);
 		 */
+		
+		trainNetworkButton = new JButton("Train X times:");
+		trainNetworkButton.setPreferredSize(new Dimension(150,30));
+		trainingSetsAmount = new JFormattedTextField("5000");
+		//trainingSetsAmount.setMaximumSize(new Dimension(100, 30));
+		trainingSetsAmount.setPreferredSize(new Dimension(150, 30));
+		panelOpcji.add(trainNetworkButton);
+		panelOpcji.add(trainingSetsAmount);
+		
 		trainAsCombo = new JComboBox<>(new String[] { "A", "O", "C" });
 		trainAsCombo.setPreferredSize(new Dimension(50, 30));
 		panelOpcji.add(trainAsCombo);
@@ -107,8 +119,18 @@ public class Projekt_1_MLP extends JFrame {
 		
 		buttonZapis.addActionListener(e -> {
 			String letter = (String) trainAsCombo.getSelectedItem();
-			SaveReadFile.saveToFile(drawingPanel.getPixels(), letter);
-			
+			SaveReadFile.saveToFile(drawingPanel.getPixels(), letter);	
+		});
+		
+		trainNetworkButton.addActionListener(e -> {
+			int number = 0;
+			try {
+				number = Integer.parseInt(trainingSetsAmount.getText());
+			} catch (Exception x) {
+				JOptionPane.showMessageDialog(this, "Wrong input", "ERROR", JOptionPane.PLAIN_MESSAGE);
+			}
+
+			//networkTrainer.train(number);
 		});
 	}
 
